@@ -1,3 +1,4 @@
+//
 export const sampleNotifications = [
   {
     id: 1,
