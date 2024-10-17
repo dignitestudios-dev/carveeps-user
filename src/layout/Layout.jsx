@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-// import Sidebar from "./Sidebar";
 import { PiCaretDown } from "react-icons/pi";
 // import { ProfileImage } from "../../assets/export";
 import { HiMenu, HiOutlineMenuAlt2 } from "react-icons/hi";
