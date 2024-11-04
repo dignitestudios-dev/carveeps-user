@@ -13,23 +13,37 @@ const BillingsTable = ({ data, dataLoading }) => {
       return;
     }
 
+    const padding = 3; // Padding at the top of each page in pixels
     element.style.backgroundColor = "#fff";
-    element.style.padding = "10px";
+    element.style.padding = `${padding}px`;
 
-    const canvas = await html2canvas(element, {
-      scale: 2, // Increase the scale for higher resolution
-    });
+    const canvas = await html2canvas(element);
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF();
-    const imgProps = pdf.getImageProperties(imgData);
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    const pdfHeight = pdf.internal.pageSize.getHeight() - padding * 2; // Adjusted height to account for padding
 
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    let imgProps = pdf.getImageProperties(imgData);
+    let imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    let heightLeft = imgHeight;
+    let position = padding;
+
+    // Add the first page with top padding
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    // Add extra pages with consistent padding at the top
+    while (heightLeft > 0) {
+      position = padding; // Reset position for each new page to start at the padding
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+    }
+
     pdf.save(filename);
 
-    // Clean up the styles after download
     element.style.backgroundColor = "";
     element.style.padding = "";
   };
