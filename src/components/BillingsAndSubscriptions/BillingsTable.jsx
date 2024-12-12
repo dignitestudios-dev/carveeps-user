@@ -4,6 +4,7 @@ import BillingTableCard from "./BillingTableCard";
 import { NoData } from "../../assets/export";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import exportToExcel from "../../utils/dataExport";
 const BillingsTable = ({ data, dataLoading }) => {
   const arr = [1, 2, 4, 54, 5];
   const handleDownload = async (elementId, filename) => {
@@ -47,6 +48,20 @@ const BillingsTable = ({ data, dataLoading }) => {
     element.style.backgroundColor = "";
     element.style.padding = "";
   };
+
+  const dataToExport = data?.map((item, key) => ({
+    InvoiceNo: key + 1,
+    Plan: item?.subscriptionPlan || "N/A",
+    Price: item?.price || 0,
+    Status: item?.status === "paid" ? "Paid" : "Unpaid",
+  }));
+
+  const dataWidths = [
+    { wch: 10 }, // Name
+    { wch: 20 }, // Email
+    { wch: 10 }, // Price
+    { wch: 10 }, // Status
+  ];
   return (
     <div className="w-full bg-white rounded-[18px] p-6 flex flex-col items-start gap-6">
       <div className="w-full flex justify-between items-center">
@@ -59,7 +74,9 @@ const BillingsTable = ({ data, dataLoading }) => {
           </p>
         </div>
         <button
-          onClick={() => handleDownload("billing-table", "BillingTable")}
+          onClick={() =>
+            exportToExcel(dataToExport, "Billing Table", dataWidths)
+          }
           className="w-auto px-2 h-6 text-xs rounded-full bg-[#000] text-[#fff]"
         >
           Download
