@@ -199,7 +199,7 @@ const BillingsTable = ({ data, dataLoading }) => {
                   </div>
                   <div className="w-1/2 flex flex-col justify-start items-start">
                     <div className="w-24 h-4 bg-gray-200 rounded-md animate-pulse"></div>
-                    <div className="w-16 h-6 mt-2 bg-gray-200 rounded-full flex justify-center items-center text-transparent bg-gray-300 animate-pulse"></div>
+                    <div className="w-16 h-6 mt-2  rounded-full flex justify-center items-center text-transparent bg-gray-300 animate-pulse"></div>
                   </div>
                 </div>
               </div>
