@@ -74,6 +74,7 @@ const BillingsTable = ({ data, dataLoading }) => {
           </p>
         </div>
         <button
+          disabled={dataLoading}
           onClick={() =>
             exportToExcel(dataToExport, "Billing Table", dataWidths)
           }
