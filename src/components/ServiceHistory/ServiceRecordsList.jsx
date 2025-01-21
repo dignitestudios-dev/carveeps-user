@@ -325,7 +325,7 @@ const ServiceRecordsList = () => {
                 >
                   <p className="text-xs font-normal">
                     {service?.lastUsed
-                      ? formatDateFromISOString(service.lastUsed)
+                      ? formatDateFromEpoch(service.lastUsed)
                       : "N/A"}
                   </p>
                   <p className="text-xs font-normal">{service.service?.name}</p>
