@@ -27,6 +27,7 @@ const Home = () => {
       (response) => {
         setPlan(response?.data?.data);
         setPlanLoading(false);
+        Cookies.set("planName",response.data.data.name)
       },
       (error) => {
         setPlanLoading(false);
@@ -46,8 +47,8 @@ const Home = () => {
     getPlan();
   }, []);
   return (
-    <div className="w-screen h-auto px-4 bg-white lg:px-0 py-6 lg:py-0 lg:h-screen flex justify-start items-start ">
-      <div className="w-full lg:w-1/2 h-full flex flex-col justify-center items-center gap-6">
+    <div className="w-screen overflow-x-hidden px-4 bg-white lg:px-0 py-6  lg:h-screen flex justify-start items-start ">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center gap-6">
         <div className="w-full lg:w-[80%] flex flex-col text-center gap-3  justify-center items-center">
           <span className="text-xl font-bold text-[#c00000]">
             {" "}
