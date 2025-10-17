@@ -60,11 +60,18 @@ const AuthLogin = () => {
               Cookies.set("email", email);
               const data = response?.data?.data;
               Cookies.set("token", data?.token, { expires: 7 });
-              Cookies.set("isCardAdded", data?.isCardAdded, { expires: 7 });
+              Cookies.set("isCardAdded", JSON.stringify(data?.isCardAdded), {
+                expires: 7,
+              });
               Cookies.set("isSubscribed", data?.isSubscribed, { expires: 7 });
               Cookies.set("isVehicleAdded", data?.isVehicleAdded, {
                 expires: 7,
               });
+              if (data?.isSubscribed === false) {
+                navigateToLink("/payment-summary", "Dashboard");
+                setLoading(false);
+                return;
+              }
               if (
                 data?.isVerified &&
                 data?.isCardAdded &&

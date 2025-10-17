@@ -26,30 +26,33 @@ const PaymentSummaryCard = () => {
         Authorization: `Bearer ${token}`,
       };
       setSummaryLoading(true);
-      axios
-        .get(`${baseUrl}/user/summary`, { headers })
-        .then((response) => {
-          if (
-            response?.data?.data?.card?.status == "active" ||
-            response?.data?.data?.card?.status == "pending"
-          ) {
-            Cookies?.set("isCardAdded", true);
-            Cookies.set("planId", response?.data?.data?.subscriptionPlan?._id, {
-              expires: 7,
-            });
-            setSummary(response?.data?.data);
-          } else {
-            Cookies?.set("isCardAdded", false);
-            setError("Your card details was not accepted please resubmit.");
-            navigateToLink("/add-card", "Dashboard");
-          }
-          setSummaryLoading(false);
-        })
-        .catch((error) => {
-          setSummaryLoading(false);
+     axios
+  .get(`${baseUrl}/user/summary`, { headers })
+  .then((response) => {
+    console.log(response.data, "✅ API RESPONSE");
 
-          setError(error?.response?.data?.message);
-        });
+    if (
+      response?.data?.data?.card?.status === "active" ||
+      response?.data?.data?.card?.status === "pending"
+    ) {
+      Cookies.set("isCardAdded", JSON.stringify(true), { expires: 7 });
+      Cookies.set("planId", response?.data?.data?.subscriptionPlan?._id, {
+        expires: 7,
+      });
+      setSummary(response?.data?.data);
+    } else {
+      // Cookies.set("isCardAdded", JSON.stringify(false));
+      setError("Your card details were not accepted. Please resubmit.");
+      navigateToLink("/add-card", "Dashboard");
+    }
+
+    setSummaryLoading(false);
+  })
+  .catch((error) => {
+    setSummaryLoading(false);
+    setError(error?.response?.data?.message || "Something went wrong");
+  });
+
     }
   };
 

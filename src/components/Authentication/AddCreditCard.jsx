@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import BtnLoader from "../global/BtnLoader";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useNavigate } from "react-router-dom";
 
 const AddCreditCard = () => {
   const { navigateToLink, baseUrl } = useContext(GlobalContext);
@@ -14,6 +15,7 @@ const AddCreditCard = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [fullName, setFullName] = useState("");
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -55,7 +57,8 @@ const AddCreditCard = () => {
               },
               { headers }
             );
-            if (response) {
+            if (response.status === 200) {
+              Cookies.set("isCardAdded", JSON.stringify(true), { expires: 7 }); // ✅ update cookie
               navigateToLink("/payment-summary", "Dashboard");
             }
           } catch (apiError) {
@@ -73,7 +76,7 @@ const AddCreditCard = () => {
   };
 
   useEffect(() => {
-    const isCardAdded = Cookies.get("isCardAdded") === "true";
+    const isCardAdded = JSON.parse(Cookies.get("isCardAdded"));
     if (isCardAdded) {
       navigateToLink("/payment-summary", "Dashboard");
     }
