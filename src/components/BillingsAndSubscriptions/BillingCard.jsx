@@ -156,31 +156,38 @@ const BillingCard = ({
           </p>
         )}
       </div>
-      <div className="w-full h-auto flex flex-col gap-2 justify-start items-end">
-        <div className="w-auto flex gap-3 justify-start items-start">
-          <button onClick={() => setIsEditOpen(true)}>
-            <FiEdit className="text-lg text-gray-500" />
-          </button>
-        </div>
-        <div className="w-full rounded-2xl grid gap-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-8  p-4 h-auto bg-[#fafafa]">
-          <img src={MasterCardIcon} alt="master_card_icon" />
-          <span className="lg:col-span-3 flex justify-start items-center text-xl font-normal text-black">
-            ****-****-****-{card?.number}
-          </span>
-          <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
-            <span className="text-sm text-center font-medium text-black">
-              Account Holder Name
-            </span>
-            <span className="text-sm font-normal text-black">{card?.name}</span>
+      {subscription?.subscriptionPlan?.planType !== "free" ? (
+        <div className="w-full h-auto flex flex-col gap-2 justify-start items-end">
+          <div className="w-auto flex gap-3 justify-start items-start">
+            <button onClick={() => setIsEditOpen(true)}>
+              <FiEdit className="text-lg text-gray-500" />
+            </button>
           </div>
-          <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
-            <span className="text-sm font-medium text-black">Expires On</span>
-            <span className="text-sm font-normal text-black">
-              {card?.expireOn}
+          <div className="w-full rounded-2xl grid gap-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-8  p-4 h-auto bg-[#fafafa]">
+            <img src={MasterCardIcon} alt="master_card_icon" />
+            <span className="lg:col-span-3 flex justify-start items-center text-xl font-normal text-black">
+              ****-****-****-{card?.number}
             </span>
+            <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
+              <span className="text-sm text-center font-medium text-black">
+                Account Holder Name
+              </span>
+              <span className="text-sm font-normal text-black">{card?.name}</span>
+            </div>
+            <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
+              <span className="text-sm font-medium text-black">Expires On</span>
+              <span className="text-sm font-normal text-black">
+                {card?.expireOn}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full rounded-2xl p-6 h-auto bg-green-50 border border-green-200 text-green-800 text-sm font-medium flex items-center gap-2 mt-2">
+          <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+          This is a Free Subscription Plan. No payment card is associated.
+        </div>
+      )}
       <EditCardModal
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}

@@ -78,30 +78,43 @@ const VerifyOtpCard = () => {
               Cookies.set("isVehicleAdded", data?.isVehicleAdded, {
                 expires: 7,
               });
-              if (
-                data?.isCardAdded &&
-                data?.isSubscribed &&
-                data?.isVehicleAdded
-              ) {
-                navigateToLink("/dashboard", "Dashboard");
-              } else if (
-                !data?.isCardAdded &&
-                !data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                setIsVerified(true);
-              } else if (
-                data?.isCardAdded &&
-                !data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/payment-summary", "Dashboard");
-              } else if (
-                data?.isCardAdded &&
-                data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/car-profile-setup", "Dashboard");
+              const planType = Cookies.get("planType");
+              if (planType === "free") {
+                if (data?.isSubscribed && data?.isVehicleAdded) {
+                  navigateToLink("/dashboard", "Dashboard");
+                } else if (!data?.isSubscribed && !data?.isVehicleAdded) {
+                  setIsVerified(true);
+                } else if (data?.isSubscribed && !data?.isVehicleAdded) {
+                  navigateToLink("/car-profile-setup", "Dashboard");
+                } else if (!data?.isSubscribed && data?.isVehicleAdded) {
+                  navigateToLink("/payment-summary", "Dashboard");
+                }
+              } else {
+                if (
+                  data?.isCardAdded &&
+                  data?.isSubscribed &&
+                  data?.isVehicleAdded
+                ) {
+                  navigateToLink("/dashboard", "Dashboard");
+                } else if (
+                  !data?.isCardAdded &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  setIsVerified(true);
+                } else if (
+                  data?.isCardAdded &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/payment-summary", "Dashboard");
+                } else if (
+                  data?.isCardAdded &&
+                  data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/car-profile-setup", "Dashboard");
+                }
               }
 
               setLoading(false);

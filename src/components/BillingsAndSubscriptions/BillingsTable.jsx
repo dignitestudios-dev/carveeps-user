@@ -147,9 +147,9 @@ const BillingsTable = ({ data, dataLoading }) => {
                           <td class=" py-4 whitespace-nowrap text-xs font-medium text-gray-800">
                             Invoice #{key + 1}
                           </td>
-                          <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
-                            USD ${transaction?.price}
-                          </td>
+                           <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
+                             {transaction?.planType === "free" || transaction?.price === 0 ? "FREE" : `USD $${transaction?.price}`}
+                           </td>
                           <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
                             {transaction?.subscriptionPlan}
                           </td>

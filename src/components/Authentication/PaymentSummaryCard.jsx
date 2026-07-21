@@ -31,12 +31,16 @@ const PaymentSummaryCard = () => {
   .then((response) => {
     console.log(response.data, "✅ API RESPONSE");
 
+    const plan = response?.data?.data?.subscriptionPlan;
+    const isFreePlan = plan?.planType === "free";
+
     if (
+      isFreePlan ||
       response?.data?.data?.card?.status === "active" ||
       response?.data?.data?.card?.status === "pending"
     ) {
-      Cookies.set("isCardAdded", JSON.stringify(true), { expires: 7 });
-      Cookies.set("planId", response?.data?.data?.subscriptionPlan?._id, {
+      Cookies.set("isCardAdded", JSON.stringify(isFreePlan ? false : true), { expires: 7 });
+      Cookies.set("planId", plan?._id, {
         expires: 7,
       });
       setSummary(response?.data?.data);
@@ -63,6 +67,35 @@ const PaymentSummaryCard = () => {
   }, []);
 
   const [buyLoading, setBuyLoading] = useState(false);
+  const [claimLoading, setClaimLoading] = useState(false);
+
+  const claimPlan = () => {
+    const token = Cookies.get("token");
+    if (token) {
+      setClaimLoading(true);
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      axios
+        .post(
+          `${baseUrl}/user/subscription/claim`,
+          {
+            subscriptionPlanId: summary?.subscriptionPlan?._id,
+          },
+          { headers }
+        )
+        .then((response) => {
+          setClaimLoading(false);
+          Cookies?.set("isSubscribed", true);
+          setIsPaymentSucceeded(true);
+        })
+        .catch((error) => {
+          setClaimLoading(false);
+          setError(error?.response?.data?.message || "Failed to claim free plan");
+        });
+    }
+  };
+
   const buyPlan = () => {
     console.log(summary?.subscriptionPlan);
     const token = Cookies.get("token");
@@ -192,45 +225,70 @@ const PaymentSummaryCard = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex flex-col gap-2 justify-start items-start">
-          <label className="text-lg font-medium text-black">
-            Payment Method
-          </label>
-          <div className="w-auto flex justify-start items-center gap-2">
-            <label className="text-md font-medium text-black">
-              Credit/Debit Card
+        {summary?.subscriptionPlan?.planType !== "free" ? (
+          <div className="w-full flex flex-col gap-2 justify-start items-start">
+            <label className="text-lg font-medium text-black">
+              Payment Method
             </label>
-          </div>
+            <div className="w-auto flex justify-start items-center gap-2">
+              <label className="text-md font-medium text-black">
+                Credit/Debit Card
+              </label>
+            </div>
 
-          <div className="w-full rounded-3xl grid gap-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-8  p-4 h-auto bg-[#fafafa]">
-            <img src={MasterCardIcon} alt="master_card_icon" />
-            <span className="lg:col-span-3 flex justify-start items-center text-xl font-normal text-black">
-              ****-****-****-{summary?.card?.number}
-            </span>
-            <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
-              <span className="text-sm text-center font-medium text-black">
-                Account Holder Name
+            <div className="w-full rounded-3xl grid gap-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-8  p-4 h-auto bg-[#fafafa]">
+              <img src={MasterCardIcon} alt="master_card_icon" />
+              <span className="lg:col-span-3 flex justify-start items-center text-xl font-normal text-black">
+                ****-****-****-{summary?.card?.number}
               </span>
-              <span className="text-sm font-normal text-black">
-                {summary?.card?.name}
-              </span>
-            </div>
-            <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
-              <span className="text-sm font-medium text-black">Expires On</span>
-              <span className="text-sm font-normal text-black">
-                {summary?.card?.expireOn}
-              </span>
+              <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
+                <span className="text-sm text-center font-medium text-black">
+                  Account Holder Name
+                </span>
+                <span className="text-sm font-normal text-black">
+                  {summary?.card?.name}
+                </span>
+              </div>
+              <div className="w-auto lg:col-span-2 flex flex-col justify-center items-start lg:items-center">
+                <span className="text-sm font-medium text-black">Expires On</span>
+                <span className="text-sm font-normal text-black">
+                  {summary?.card?.expireOn}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full flex items-center justify-end">
-          <div className="w-auto flex gap-1 justify-start items-end">
+        ) : (
+          <div className="w-full flex flex-col gap-2 justify-start items-start">
+            <label className="text-lg font-medium text-black">
+              Payment Method
+            </label>
+            <div className="w-full rounded-3xl p-6 h-auto bg-green-50 border border-green-200 text-green-800 text-sm font-medium flex items-center gap-2">
+              <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+              No payment card required for Free Subscription Plans.
+            </div>
+          </div>
+        )}
+        <div className="w-full flex justify-between items-center flex-wrap gap-4 mt-2">
+          <div>
+            {summary?.subscriptionPlan?.isOneTime && (
+              <span className="h-7 px-3.5 rounded-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[11px] font-bold tracking-wide shadow-sm border border-indigo-400/20 uppercase animate-pulse">
+                One-Time Trial
+              </span>
+            )}
+          </div>
+          <div className="w-auto flex gap-1 justify-start items-end ml-auto">
             <span className="text-lg font-normal text-black">
               Total Amount:
             </span>{" "}
-            <span className="text-4xl font-bold text-black">
-              ${summary?.subscriptionPlan?.price}{" "}
-            </span>{" "}
+            {summary?.subscriptionPlan?.planType === "free" ? (
+              <span className="text-4xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent uppercase">
+                Free
+              </span>
+            ) : (
+              <span className="text-4xl font-bold text-black">
+                ${summary?.subscriptionPlan?.price}{" "}
+              </span>
+            )}
             <span className="text-md text-black font-medium">
               /
               {summary?.subscriptionPlan?.interval === "year"
@@ -257,15 +315,23 @@ const PaymentSummaryCard = () => {
         >
           Back
         </button>
-        <button
-          disabled={summaryLoading}
-          onClick={() => {
-            buyPlan();
-          }}
-          className="w-1/2 h-14 rounded-lg flex items-center justify-center bg-[#FF204E] text-white text-md font-medium"
-        >
-          {buyLoading ? <BtnLoader /> : "Pay Now"}
-        </button>
+        {summary?.subscriptionPlan?.planType === "free" ? (
+          <button
+            disabled={summaryLoading || claimLoading}
+            onClick={claimPlan}
+            className="w-1/2 h-14 rounded-lg flex items-center justify-center bg-[#FF204E] text-white text-md font-medium"
+          >
+            {claimLoading ? <BtnLoader /> : "Claim Free Plan"}
+          </button>
+        ) : (
+          <button
+            disabled={summaryLoading || buyLoading}
+            onClick={buyPlan}
+            className="w-1/2 h-14 rounded-lg flex items-center justify-center bg-[#FF204E] text-white text-md font-medium"
+          >
+            {buyLoading ? <BtnLoader /> : "Pay Now"}
+          </button>
+        )}
       </div>
     </div>
   );

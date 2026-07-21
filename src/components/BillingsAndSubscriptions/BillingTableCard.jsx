@@ -15,7 +15,7 @@ const BillingTableCard = ({ transaction, number }) => {
         <div className="w-1/2 flex flex-col justify-start items-start ">
           <h1 className="text-md font-medium text-black">Amount</h1>
           <p className="text-xs font-medium text-[#7c7c7c]">
-            USD ${transaction?.price}
+            {transaction?.planType === "free" || transaction?.price === 0 ? "FREE" : `USD $${transaction?.price}`}
           </p>
         </div>
       </div>

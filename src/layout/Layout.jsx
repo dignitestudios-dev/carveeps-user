@@ -66,11 +66,16 @@ const Layout = ({ pages }) => {
     const isSubscribed = Cookies.get("isSubscribed") === "true";
     const isCardAdded = Cookies.get("isCardAdded") === "true";
     const token = Cookies.get("token");
-    if (token && (!isVehicleAdded || !isSubscribed || !isCardAdded)) {
+    
+    // If the user has completed subscription step, card presence is no longer a blocker to accessing dashboard.
+    const cardCondition = isSubscribed ? true : isCardAdded;
+
+    if (token && (!isVehicleAdded || !isSubscribed || !cardCondition)) {
       console.log("first");
       Cookies.remove("isVehicleAdded");
       Cookies.remove("isSubscribed");
       Cookies.remove("isCardAdded");
+      Cookies.remove("planType");
       Cookies.remove("userName");
       Cookies.remove("userProfile");
       Cookies.remove("appointmentLink");

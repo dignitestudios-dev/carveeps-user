@@ -22,7 +22,14 @@ const PreviousSubscriptionCard = ({ subscription }) => {
           </p>
         </div>
         <div className="w-1/2 flex flex-col justify-start items-start ">
-          <h1 className="text-md font-medium text-black">Subscription Plan</h1>
+          <h1 className="text-md font-medium text-black flex items-center gap-1.5 flex-wrap">
+            Subscription Plan
+            {subscription?.isOneTime && (
+              <span className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[9px] font-bold rounded uppercase animate-pulse">
+                One-Time
+              </span>
+            )}
+          </h1>
           <p className="text-xs font-medium text-[#7c7c7c]">
             {subscription?.subscriptionPlan}
           </p>
@@ -38,7 +45,7 @@ const PreviousSubscriptionCard = ({ subscription }) => {
         <div className="w-1/2 flex flex-col justify-start items-start ">
           <h1 className="text-md font-medium text-black">Amount</h1>
           <p className="text-xs font-medium text-[#7c7c7c]">
-            USD ${subscription?.price}
+            {subscription?.planType === "free" || subscription?.price === 0 ? "FREE" : `USD $${subscription?.price}`}
           </p>
         </div>
       </div>

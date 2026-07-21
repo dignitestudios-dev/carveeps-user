@@ -2,13 +2,19 @@ import React, { useEffect } from "react";
 import { BigShieldIcon } from "../../assets/export";
 import { useNavigate } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const SubscriptionActivatedModal = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   useEffect(() => {
+    const isVehicleAdded = Cookies.get("isVehicleAdded") === "true";
     setTimeout(() => {
       setIsOpen(false);
-      navigate("/car-profile-setup");
+      if (isVehicleAdded) {
+        navigate("/dashboard");
+      } else {
+        navigate("/car-profile-setup");
+      }
     }, 5000);
   }, []);
   return (

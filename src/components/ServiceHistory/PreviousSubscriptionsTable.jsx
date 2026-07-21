@@ -192,8 +192,8 @@ const PreviousSubscriptionsTable = () => {
                           <td class=" py-4 whitespace-nowrap capitalize text-xs text-gray-800">
                             {subscription?.interval}ly
                           </td>
-                          <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
-                            USD ${subscription?.price}
+                          <td class=" py-4 whitespace-nowrap text-xs text-gray-800 font-medium">
+                            {subscription?.planType === "free" || subscription?.price === 0 ? "FREE" : `USD $${subscription?.price}`}
                           </td>
                           <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
                             {subscription?.soldBy}

@@ -72,43 +72,74 @@ const AuthLogin = () => {
                 setLoading(false);
                 return;
               }
-              if (
-                data?.isVerified &&
-                data?.isCardAdded &&
-                data?.isSubscribed &&
-                data?.isVehicleAdded
-              ) {
-                fetchToken().then(() => {
-                  navigateToLink("/dashboard", "Dashboard");
-                });
-              } else if (
-                !data?.isVerified &&
-                !data?.isCardAdded &&
-                !data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/verify-otp", "Dashboard");
-              } else if (
-                data?.isVerified &&
-                !data?.isCardAdded &&
-                !data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/add-card", "Dashboard");
-              } else if (
-                data?.isVerified &&
-                data?.isCardAdded &&
-                !data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/payment-summary", "Dashboard");
-              } else if (
-                data?.isVerified &&
-                data?.isCardAdded &&
-                data?.isSubscribed &&
-                !data?.isVehicleAdded
-              ) {
-                navigateToLink("/car-profile-setup", "Dashboard");
+              const planType = Cookies.get("planType");
+              if (planType === "free") {
+                if (
+                  data?.isVerified &&
+                  data?.isSubscribed &&
+                  data?.isVehicleAdded
+                ) {
+                  fetchToken().then(() => {
+                    navigateToLink("/dashboard", "Dashboard");
+                  });
+                } else if (
+                  !data?.isVerified &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/verify-otp", "Dashboard");
+                } else if (
+                  data?.isVerified &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/payment-summary", "Dashboard");
+                } else if (
+                  data?.isVerified &&
+                  data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/car-profile-setup", "Dashboard");
+                }
+              } else {
+                if (
+                  data?.isVerified &&
+                  data?.isCardAdded &&
+                  data?.isSubscribed &&
+                  data?.isVehicleAdded
+                ) {
+                  fetchToken().then(() => {
+                    navigateToLink("/dashboard", "Dashboard");
+                  });
+                } else if (
+                  !data?.isVerified &&
+                  !data?.isCardAdded &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/verify-otp", "Dashboard");
+                } else if (
+                  data?.isVerified &&
+                  !data?.isCardAdded &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/add-card", "Dashboard");
+                } else if (
+                  data?.isVerified &&
+                  data?.isCardAdded &&
+                  !data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/payment-summary", "Dashboard");
+                } else if (
+                  data?.isVerified &&
+                  data?.isCardAdded &&
+                  data?.isSubscribed &&
+                  !data?.isVehicleAdded
+                ) {
+                  navigateToLink("/car-profile-setup", "Dashboard");
+                }
               }
             }
             setLoading(false);

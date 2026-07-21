@@ -149,39 +149,56 @@ const PackageCard = () => {
 
           {/* Status */}
           <span
-            className={`px-3 h-7 flex items-center rounded-full text-xs font-medium capitalize ${data?.status === "paid"
+            className={`px-3 h-7 flex items-center rounded-full text-xs font-medium capitalize ${data?.status === "paid" || data?.subscriptionPlan?.planType === "free"
               ? "bg-green-100 text-green-600"
               : "bg-gray-200 text-gray-500"
               }`}
           >
-            {data?.status === "paid" ? "Active" : "Inactive"}
+            {data?.status === "paid" || data?.subscriptionPlan?.planType === "free" ? "Active" : "Inactive"}
           </span>
+          {data?.subscriptionPlan?.planType === "free" && (
+            <span className="h-7 px-3.5 rounded-full flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[11px] font-bold tracking-wide shadow-sm border border-emerald-400/20 uppercase">
+              Free Plan
+            </span>
+          )}
+
+          {/* One-Time Trial Badge */}
+          {data?.subscriptionPlan?.isOneTime && (
+            <span className="h-7 px-3 rounded-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-semibold border border-indigo-400/20 shadow-sm animate-pulse">
+              One-Time Trial
+            </span>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2">
           {/* Cancel */}
-          <button
-            onClick={() => setShowCancelModal(true)}
-            disabled={cancelLoading || data?.status !== "paid"}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${cancelLoading || data?.status !== "paid"
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-red-600 hover:bg-red-700 text-white"
-              }`}
-          >
-            {cancelLoading ? "Loading..." : "Cancel Subscription"}
-          </button>
-
           {/* Auto Renewal */}
-          <button
-            onClick={handleAutoRenewOff}
-            disabled={autoRenewLoading || data?.cancelAtPeriodEnd === true}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition  ${autoRenewLoading || data?.cancelAtPeriodEnd
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : " bg-amber-500 hover:bg-amber-600 text-white"
-              }"`}
-          >
-            {autoRenewLoading ? "Loading..." : "Turn Off Auto-Renewal"}
-          </button>
+          {data?.subscriptionPlan?.planType !== "free" && (
+            <>
+              <button
+                onClick={() => setShowCancelModal(true)}
+                disabled={cancelLoading || data?.status !== "paid"}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${cancelLoading || data?.status !== "paid"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 text-white"
+                  }`}
+              >
+                {cancelLoading ? "Loading..." : "Cancel Subscription"}
+              </button>
+
+
+              <button
+                onClick={handleAutoRenewOff}
+                disabled={autoRenewLoading || data?.cancelAtPeriodEnd === true}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition  ${autoRenewLoading || data?.cancelAtPeriodEnd
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : " bg-amber-500 hover:bg-amber-600 text-white"
+                  }"`}
+              >
+                {autoRenewLoading ? "Loading..." : "Turn Off Auto-Renewal"}
+              </button>
+            </>
+          )}
 
           {/* Dealer */}
           <button

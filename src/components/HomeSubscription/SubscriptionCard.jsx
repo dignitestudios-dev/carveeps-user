@@ -69,14 +69,29 @@ const SubscriptionCard = ({ plan, loading }) => {
         </span>
       </div>
 
-      <span className="h-10 w-40 rounded-full flex justify-center items-center px-3 bg-[#c00000] text-white text-md font-medium">
-        {plan?.dealership?.name}
-      </span>
+      <div className="w-full flex justify-between items-center gap-2">
+        <span className="h-10 w-auto rounded-full flex items-center justify-center px-4 bg-[#c00000] text-white text-sm font-medium">
+          {plan?.dealership?.name}
+        </span>
+        {plan?.isOneTime && (
+          <span className="h-7 px-3.5 rounded-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[11px] font-bold tracking-wide shadow-sm border border-indigo-400/20 uppercase animate-pulse">
+            One-Time Trial
+          </span>
+        )}
+      </div>
 
-      <div className="relative">
-        <span className="text-2xl font-semibold absolute top-0 -left-3">$</span>
-        <span className="text-7xl font-bold text-black">{plan?.price}</span>
-        <span className="text-lg font-medium">
+      <div className="relative flex items-baseline gap-1">
+        {plan?.planType === "free" ? (
+          <span className="text-5xl font-extrabold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent uppercase">
+            Free
+          </span>
+        ) : (
+          <>
+            <span className="text-2xl font-semibold absolute top-0 -left-3">$</span>
+            <span className="text-7xl font-bold text-black">{plan?.price}</span>
+          </>
+        )}
+        <span className="text-lg font-medium ml-1">
           /{" "}
           {plan?.interval == "year" && plan?.intervalCount == 1
             ? "Annually"
@@ -88,11 +103,12 @@ const SubscriptionCard = ({ plan, loading }) => {
       <button
         onClick={() => {
           Cookies.set("planId", plan?._id, { expires: 7 });
+          Cookies.set("planType", plan?.planType || "paid", { expires: 7 });
           navigateToLink("/register-account", "Dashboard");
         }}
         className="w-full h-10 rounded-lg flex items-center justify-center bg-[#FF204E] text-white text-md font-medium"
       >
-        Buy Now
+        {plan?.planType === "free" ? "Claim Free Plan" : "Buy Now"}
       </button>
 
       <div className="w-full flex flex-col gap-2 justify-start items-start">
