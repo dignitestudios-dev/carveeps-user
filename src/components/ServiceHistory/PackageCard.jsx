@@ -9,6 +9,7 @@ const PackageCard = () => {
   const [data, setData] = useState(null);
   const [dataLoading, setDataLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [autoRenewLoading, setAutoRenewLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
@@ -60,6 +61,45 @@ const PackageCard = () => {
       setCancelLoading(false);
     }
   };
+  const handleAutoRenewOff = async () => {
+    if (!data?._id) {
+      setError("No active subscription found.");
+      return;
+    }
+
+    const token = Cookies.get("token");
+    if (!token) {
+      navigateToLink("/register-account", "Dashboard");
+      return;
+    }
+
+    setAutoRenewLoading(true);
+
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const response = await axios.put(
+        `${baseUrl}/user/subscription/cancel`,
+        { subscription: data?._id, cancelAtPeriodEnd: true, },
+        { headers }
+      );
+
+      if (response.status === 200) {
+        // ✅ Refresh package info
+        getPackageInfo();
+
+        // ✅ Update isSubscribed flag in cookies
+
+      }
+    } catch (err) {
+      console.error(err);
+      setError(
+        err?.response?.data?.message || "Failed to cancel subscription."
+      );
+    } finally {
+      setAutoRenewLoading(false);
+    }
+  };
 
   // ✅ Fetch package info
   const getPackageInfo = () => {
@@ -95,50 +135,67 @@ const PackageCard = () => {
 
   return (
     <div className="w-full lg:w-[562px] rounded-2xl flex flex-col px-4 pb-2 bg-white justify-start items-start">
-      <div className="w-full flex justify-between items-center h-16">
-        <div className="w-auto flex justify-start items-center gap-2 flex-wrap">
-          <div className="w-[135px] h-[36px] flex items-center justify-center gap-1 text-white text-[14px] font-medium bg-[#C20028] rounded-full">
+      <div className="w-full flex justify-between items-start flex-wrap gap-4 py-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Plan */}
+          <div className="px-4 h-9 flex items-center justify-center text-white text-sm font-medium bg-[#C20028] rounded-full">
             {data?.subscriptionPlan?.name}
           </div>
 
-          <span className="text-[10px] font-medium flex items-center justify-center w-auto px-2 h-6 bg-[#eaeaea] text-black rounded-full capitalize">
+          {/* Interval */}
+          <span className="px-3 h-7 flex items-center rounded-full bg-gray-100 text-xs font-medium capitalize">
             {data?.subscriptionPlan?.interval}ly
           </span>
 
+          {/* Status */}
           <span
-            className={`text-[10px] capitalize font-medium flex items-center justify-center w-auto px-2 h-6 rounded-full ${
-              data?.status === "paid"
-                ? "bg-[#05FA00]/[0.13] text-[#05FA00]"
-                : "bg-gray-200 text-gray-500"
-            }`}
+            className={`px-3 h-7 flex items-center rounded-full text-xs font-medium capitalize ${data?.status === "paid"
+              ? "bg-green-100 text-green-600"
+              : "bg-gray-200 text-gray-500"
+              }`}
           >
             {data?.status === "paid" ? "Active" : "Inactive"}
           </span>
+        </div>
 
+        <div className="flex flex-wrap gap-2">
+          {/* Cancel */}
           <button
             onClick={() => setShowCancelModal(true)}
             disabled={cancelLoading || data?.status !== "paid"}
-            className={`transition-all duration-300 ease-in-out px-4 py-2 rounded-[10px] text-sm font-semibold  active:scale-95 ${
-              cancelLoading || data?.status !== "paid"
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-[#FF204E] hover:bg-[#d91b43] text-white"
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${cancelLoading || data?.status !== "paid"
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700 text-white"
+              }`}
           >
-            {cancelLoading ? "Cancelling..." : "Cancel Subscription"}
+            {cancelLoading ? "Loading..." : "Cancel Subscription"}
+          </button>
+
+          {/* Auto Renewal */}
+          <button
+            onClick={handleAutoRenewOff}
+            disabled={autoRenewLoading || data?.cancelAtPeriodEnd === true}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition  ${autoRenewLoading || data?.cancelAtPeriodEnd
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : " bg-amber-500 hover:bg-amber-600 text-white"
+              }"`}
+          >
+            {autoRenewLoading ? "Loading..." : "Turn Off Auto-Renewal"}
+          </button>
+
+          {/* Dealer */}
+          <button
+            onClick={() =>
+              navigateToLink(
+                `/profile/dealer/${data?.subscriptionPlan?.dealership?._id}`,
+                "Service History"
+              )
+            }
+            className="px-4 py-2 rounded-lg border border-[#FF204E] text-[#FF204E] hover:bg-[#FF204E] hover:text-white transition"
+          >
+            View Dealer
           </button>
         </div>
-
-        <button
-          onClick={() =>
-            navigateToLink(
-              `/profile/dealer/${data?.subscriptionPlan?.dealership?._id}`,
-              "Service History"
-            )
-          }
-          className="text-[#FF204E] text-xs font-medium underline-offset-4 underline hover:text-[#d91b43] transition-colors duration-200"
-        >
-          View Dealer
-        </button>
       </div>
 
       <div className="w-full flex flex-col justify-start items-start">
