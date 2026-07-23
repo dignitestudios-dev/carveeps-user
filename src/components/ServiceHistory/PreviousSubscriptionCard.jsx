@@ -31,7 +31,9 @@ const PreviousSubscriptionCard = ({ subscription }) => {
             )}
           </h1>
           <p className="text-xs font-medium text-[#7c7c7c]">
-            {subscription?.subscriptionPlan}
+            {typeof subscription?.subscriptionPlan === "object"
+              ? subscription?.subscriptionPlan?.name
+              : subscription?.subscriptionPlan}
           </p>
         </div>
       </div>

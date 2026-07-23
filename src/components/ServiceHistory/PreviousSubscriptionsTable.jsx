@@ -187,7 +187,9 @@ const PreviousSubscriptionsTable = () => {
                             {formatDateFromISOString(subscription?.createdAt)}
                           </td>
                           <td class=" py-4 whitespace-nowrap text-xs text-gray-800">
-                            {subscription?.subscriptionPlan}
+                            {typeof subscription?.subscriptionPlan === "object"
+                              ? subscription?.subscriptionPlan?.name
+                              : subscription?.subscriptionPlan}
                           </td>
                           <td class=" py-4 whitespace-nowrap capitalize text-xs text-gray-800">
                             {subscription?.interval}ly
