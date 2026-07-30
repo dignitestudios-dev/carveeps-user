@@ -158,7 +158,7 @@ const EditCardForm = ({ isOpen, setIsOpen, updateCard }) => {
               Card Number
             </label>
             <div className="w-full h-14 bg-gray-50 focus-within:ring-2 ring-[#ff204e]/[0.4] rounded-lg px-3 flex items-center">
-              <CardNumberElement className="w-full" options={elementOptions} />
+              <CardNumberElement className="w-full !border-none !p-0 !bg-transparent !shadow-none" options={elementOptions} />
             </div>
           </div>
 
@@ -168,13 +168,13 @@ const EditCardForm = ({ isOpen, setIsOpen, updateCard }) => {
                 Valid Through
               </label>
               <div className="w-full h-14 bg-gray-50 focus-within:ring-2 ring-[#ff204e]/[0.4] rounded-lg px-3 flex items-center">
-                <CardExpiryElement className="w-full" options={elementOptions} />
+                <CardExpiryElement className="w-full !border-none !p-0 !bg-transparent !shadow-none" options={elementOptions} />
               </div>
             </div>
             <div className="w-[35%] flex flex-col gap-2 justify-start items-start">
               <label className="text-sm font-medium text-black">CVC</label>
               <div className="w-full h-14 bg-gray-50 focus-within:ring-2 ring-[#ff204e]/[0.4] rounded-lg px-3 flex items-center">
-                <CardCvcElement className="w-full" options={elementOptions} />
+                <CardCvcElement className="w-full !border-none !p-0 !bg-transparent !shadow-none" options={elementOptions} />
               </div>
             </div>
           </div>

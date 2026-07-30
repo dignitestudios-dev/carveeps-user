@@ -11,9 +11,13 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import BtnLoader from "../global/BtnLoader";
 import Error from "../global/Error";
+import { FiEdit } from "react-icons/fi";
+import EditCardModal from "../BillingsAndSubscriptions/EditCardModal";
 
 const PaymentSummaryCard = () => {
   const [isPaymentSucceeded, setIsPaymentSucceeded] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [cardUpdate, setCardUpdate] = useState(false);
   const { navigateToLink, baseUrl } = useContext(GlobalContext);
   const [summary, setSummary] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
@@ -64,7 +68,7 @@ const PaymentSummaryCard = () => {
     // Apply the conditions here later as well
     //get summary only if user has not subscribed
     getSummary();
-  }, []);
+  }, [cardUpdate]);
 
   const [buyLoading, setBuyLoading] = useState(false);
   const [claimLoading, setClaimLoading] = useState(false);
@@ -227,9 +231,18 @@ const PaymentSummaryCard = () => {
         </div>
         {summary?.subscriptionPlan?.planType !== "free" ? (
           <div className="w-full flex flex-col gap-2 justify-start items-start">
-            <label className="text-lg font-medium text-black">
-              Payment Method
-            </label>
+            <div className="w-full flex justify-between items-center">
+              <label className="text-lg font-medium text-black">
+                Payment Method
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsEditOpen(true)}
+                className="flex items-center gap-1 text-sm font-medium text-[#FF204E] hover:underline"
+              >
+                <FiEdit className="text-base" /> Edit Card
+              </button>
+            </div>
             <div className="w-auto flex justify-start items-center gap-2">
               <label className="text-md font-medium text-black">
                 Credit/Debit Card
@@ -307,6 +320,12 @@ const PaymentSummaryCard = () => {
           setIsOpen={setIsPaymentSucceeded}
         />
       )}
+
+      <EditCardModal
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+        updateCard={setCardUpdate}
+      />
 
       <div className="w-full h-auto flex gap-2 justify-start items-center">
         <button
