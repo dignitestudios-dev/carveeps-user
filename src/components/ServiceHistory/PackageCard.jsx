@@ -173,18 +173,18 @@ const PackageCard = () => {
         <div className="flex flex-wrap gap-2">
           {/* Cancel */}
           {/* Auto Renewal */}
+          <button
+            onClick={() => setShowCancelModal(true)}
+            disabled={cancelLoading || data?.status !== "paid"}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${cancelLoading || data?.status !== "paid"
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700 text-white"
+              }`}
+          >
+            {cancelLoading ? "Loading..." : "Cancel Subscription"}
+          </button>
           {data?.subscriptionPlan?.planType !== "free" && (
             <>
-              <button
-                onClick={() => setShowCancelModal(true)}
-                disabled={cancelLoading || data?.status !== "paid"}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${cancelLoading || data?.status !== "paid"
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700 text-white"
-                  }`}
-              >
-                {cancelLoading ? "Loading..." : "Cancel Subscription"}
-              </button>
 
 
               <button

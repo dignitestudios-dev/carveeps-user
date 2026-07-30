@@ -67,79 +67,21 @@ const AuthLogin = () => {
               Cookies.set("isVehicleAdded", data?.isVehicleAdded, {
                 expires: 7,
               });
-              if (data?.isSubscribed === false) {
-                navigateToLink("/payment-summary", "Dashboard");
-                setLoading(false);
-                return;
-              }
-              const planType = Cookies.get("planType");
-              if (planType === "free") {
-                if (
-                  data?.isVerified &&
-                  data?.isSubscribed &&
-                  data?.isVehicleAdded
-                ) {
-                  fetchToken().then(() => {
-                    navigateToLink("/dashboard", "Dashboard");
-                  });
-                } else if (
-                  !data?.isVerified &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/verify-otp", "Dashboard");
-                } else if (
-                  data?.isVerified &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/payment-summary", "Dashboard");
-                } else if (
-                  data?.isVerified &&
-                  data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/car-profile-setup", "Dashboard");
-                }
-              } else {
-                if (
-                  data?.isVerified &&
-                  data?.isCardAdded &&
-                  data?.isSubscribed &&
-                  data?.isVehicleAdded
-                ) {
-                  fetchToken().then(() => {
-                    navigateToLink("/dashboard", "Dashboard");
-                  });
-                } else if (
-                  !data?.isVerified &&
-                  !data?.isCardAdded &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/verify-otp", "Dashboard");
-                } else if (
-                  data?.isVerified &&
-                  !data?.isCardAdded &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
+
+              if (!data?.isVerified) {
+                navigateToLink("/verify-otp", "Dashboard");
+              } else if (!data?.isSubscribed) {
+                if (!data?.isCardAdded && Cookies.get("planType") !== "free") {
                   navigateToLink("/add-card", "Dashboard");
-                } else if (
-                  data?.isVerified &&
-                  data?.isCardAdded &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
+                } else {
                   navigateToLink("/payment-summary", "Dashboard");
-                } else if (
-                  data?.isVerified &&
-                  data?.isCardAdded &&
-                  data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/car-profile-setup", "Dashboard");
                 }
+              } else if (!data?.isVehicleAdded) {
+                navigateToLink("/car-profile-setup", "Dashboard");
+              } else {
+                fetchToken().then(() => {
+                  navigateToLink("/dashboard", "Dashboard");
+                });
               }
             }
             setLoading(false);

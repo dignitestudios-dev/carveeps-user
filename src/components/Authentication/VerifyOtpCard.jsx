@@ -79,42 +79,16 @@ const VerifyOtpCard = () => {
                 expires: 7,
               });
               const planType = Cookies.get("planType");
-              if (planType === "free") {
-                if (data?.isSubscribed && data?.isVehicleAdded) {
-                  navigateToLink("/dashboard", "Dashboard");
-                } else if (!data?.isSubscribed && !data?.isVehicleAdded) {
+              if (!data?.isSubscribed) {
+                if (!data?.isCardAdded && planType !== "free") {
                   setIsVerified(true);
-                } else if (data?.isSubscribed && !data?.isVehicleAdded) {
-                  navigateToLink("/car-profile-setup", "Dashboard");
-                } else if (!data?.isSubscribed && data?.isVehicleAdded) {
+                } else {
                   navigateToLink("/payment-summary", "Dashboard");
                 }
+              } else if (!data?.isVehicleAdded) {
+                navigateToLink("/car-profile-setup", "Dashboard");
               } else {
-                if (
-                  data?.isCardAdded &&
-                  data?.isSubscribed &&
-                  data?.isVehicleAdded
-                ) {
-                  navigateToLink("/dashboard", "Dashboard");
-                } else if (
-                  !data?.isCardAdded &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  setIsVerified(true);
-                } else if (
-                  data?.isCardAdded &&
-                  !data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/payment-summary", "Dashboard");
-                } else if (
-                  data?.isCardAdded &&
-                  data?.isSubscribed &&
-                  !data?.isVehicleAdded
-                ) {
-                  navigateToLink("/car-profile-setup", "Dashboard");
-                }
+                navigateToLink("/dashboard", "Dashboard");
               }
 
               setLoading(false);
