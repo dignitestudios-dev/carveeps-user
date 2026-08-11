@@ -11,9 +11,8 @@ import Cookies from "js-cookie";
 export const GlobalContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  // const baseUrl = "https://api.carveeps.com";
-   const baseUrl = "http://192.168.9.15:5000";
-
+  const baseUrl = "https://api.carveeps.com";
+  //  const baseUrl = "http://192.168.9.15:5000";
 
   // Sidebar link toggle
   const [activeLink, setActiveLink] = useState("Dashboard");
