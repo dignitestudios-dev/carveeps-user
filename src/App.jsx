@@ -77,6 +77,7 @@ function App() {
         path="/profile/dealer/:id"
         element={<Layout pages={<DealersProfile />} />}
       />
+      {/* tes */}
 
       <Route
         path="/settings/notifications"
