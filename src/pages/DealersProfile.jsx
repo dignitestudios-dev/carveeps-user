@@ -200,7 +200,7 @@ const DealersProfile = () => {
 
         {/* Businness Details */}
         <div className="w-full flex flex-col  p-4 lg:p-12 justify-start items-start gap-8 border-t-2 border-[#D2D2D2]">
-          <h1 className="text-2xl font-bold text-black">Bussiness Details</h1>
+          <h1 className="text-2xl font-bold text-black">Business Details</h1>
 
           <div className="w-full h-auto gap-4 lg:gap-16  grid grid-cols-1 relative md:grid-cols-2 lg:grid-cols-3 ">
             <div className="w-full flex flex-col gap-4 lg:gap-12 justify-start items-start">
