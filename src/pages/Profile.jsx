@@ -12,7 +12,7 @@ const Profile = () => {
   const { baseUrl, navigateToLink, update, setUpdate } =
     useContext(GlobalContext);
   const [profileLoading, setProfileLoading] = useState(false);
-
+// test
   const getProfile = () => {
     const token = Cookies.get("token");
 
